@@ -25,6 +25,7 @@ class ListaTranferencias extends StatelessWidget {
       ItemTransferencia(Transferencia(100.0, 572)),
       ItemTransferencia(Transferencia(100.0, 572)),
       ItemTransferencia(Transferencia(147.0, 572)),
+      ItemTransferencia(Transferencia(200.0, 572)),
     ]);
   }
 }
