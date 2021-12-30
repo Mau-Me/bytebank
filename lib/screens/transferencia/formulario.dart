@@ -1,15 +1,12 @@
 import 'package:bytebank/components/editor.dart';
+import 'package:bytebank/constant/constants.dart';
+import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:flutter/material.dart';
 
-const _tituloAppBar = 'Criando Transferência';
-const _rotuloNumeroConta = 'Número da Conta';
-const _rotuloValorTransferencia = 'Valor da Transferência';
-const _dicaNumeroConta = '0000';
-const _dicaValorTransferencia = '0.00';
-const _textoBotaoConfirmar = 'Confirmar';
-
 class FormularioTransferencia extends StatefulWidget {
+  const FormularioTransferencia({Key? key}) : super(key: key);
+
   @override
   State<FormularioTransferencia> createState() =>
       _FormularioTransferenciaState();
@@ -25,23 +22,29 @@ class _FormularioTransferenciaState extends State<FormularioTransferencia> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(_tituloAppBar),
+        title: const Text(tituloAppBarFormularioTransferencias),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             Editor(
                 controlador: _controladorCampoNumeroConta,
-                rotulo: _rotuloNumeroConta,
-                dica: _dicaNumeroConta),
+                rotulo: rotuloNumeroConta,
+                dica: dicaNumeroConta),
             Editor(
                 controlador: _controladorCampoValor,
-                rotulo: _rotuloValorTransferencia,
-                dica: _dicaValorTransferencia,
+                rotulo: rotuloValorTransferencia,
+                dica: dicaValorTransferencia,
                 icone: Icons.monetization_on),
-            ElevatedButton(
-              child: const Text(_textoBotaoConfirmar),
-              onPressed: () => _criaTransferencia(context),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width: double.maxFinite,
+                child: ElevatedButton(
+                  child: const Text(textoBotaoConfirmar),
+                  onPressed: () => _criaTransferencia(context),
+                ),
+              ),
             ),
           ],
         ),
@@ -49,16 +52,33 @@ class _FormularioTransferenciaState extends State<FormularioTransferencia> {
     );
   }
 
+  //CORRIGIR ID = 0;
+
   void _criaTransferencia(BuildContext context) {
+    const int id = 0;
     final int? numeroConta = int.tryParse(_controladorCampoNumeroConta.text);
     final double? valorTransferencia =
         double.tryParse(_controladorCampoValor.text);
     if (numeroConta != null && valorTransferencia != null) {
       final Transferencia transferenciaCriada = Transferencia(
+        id,
         numeroConta,
         valorTransferencia,
       );
-      Navigator.pop(context, transferenciaCriada);
+      save(transferenciaCriada).then(
+        (id) => Navigator.pop(context),
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Row(
+            children: const <Widget>[
+              Icon(Icons.price_check),
+              Text(mensagemSucessoTransferencia),
+            ],
+          ),
+          duration: const Duration(seconds: 3),
+        ),
+      );
     }
   }
 }

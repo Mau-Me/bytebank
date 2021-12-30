@@ -1,69 +1,88 @@
+import 'package:bytebank/database/app_database.dart';
 import 'package:bytebank/models/transferencia.dart';
+import 'package:bytebank/screens/transferencia/formulario.dart';
+import 'package:bytebank/constant/constants.dart';
 import 'package:flutter/material.dart';
 
-import 'formulario.dart';
-
-const _tituloAppBar = 'Lista de Transferências';
-const _mensagemSucesso = 'Transferência realizada com sucesso!';
-
-class ListaTransferencias extends StatefulWidget {
-  final _transferencias = <Transferencia>[];
-
-  @override
-  State<StatefulWidget> createState() {
-    return ListaTransferenciasState();
-  }
-}
-
-class ListaTransferenciasState extends State<ListaTransferencias> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: const Text(_tituloAppBar),
-        ),
-        body: ListView.builder(
+/*body: ListView.builder(
           itemCount: widget._transferencias.length,
           itemBuilder: (context, indice) {
             final transferencia = widget._transferencias[indice];
             return ItemTransferencia(transferencia);
           },
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            final Future<Transferencia?> future = Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => FormularioTransferencia(),
-              ),
-            );
-            atualiza(future, context);
-          },
-          child: const Icon(Icons.add),
-        ));
-  }
+        )
+*/
 
-  void atualiza(Future<Transferencia?> future, BuildContext context) {
-    future.then((transfereniaRecebida) {
-      if (transfereniaRecebida != null) {
-        setState(
-          () {
-            widget._transferencias.add(transfereniaRecebida);
-          },
-        );
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text(_mensagemSucesso),
-          ),
-        );
-      }
-    });
+class ListaTransferencias extends StatefulWidget {
+  const ListaTransferencias({Key? key}) : super(key: key);
+
+  @override
+  State<ListaTransferencias> createState() => _ListaTransferenciasState();
+}
+
+class _ListaTransferenciasState extends State<ListaTransferencias> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(tituloAppBarFormularioTransferencias),
+      ),
+      body: FutureBuilder<List<Transferencia>>(
+        initialData: const [],
+        future: findAll(),
+        builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
+          switch (snapshot.connectionState) {
+            case ConnectionState.none:
+              break;
+            case ConnectionState.waiting:
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    CircularProgressIndicator(),
+                    Text('Carregando...'),
+                  ],
+                ),
+              );
+            case ConnectionState.active:
+              break;
+            case ConnectionState.done:
+              final List<Transferencia> transferencias = snapshot.data;
+              return ListView.builder(
+                itemBuilder: (context, indice) {
+                  final transferencia = transferencias[indice];
+                  return ItemTransferencia(transferencia);
+                },
+                itemCount: transferencias.length,
+              );
+          }
+          return const Text('Unknown error');
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.of(context)
+              .push(
+            MaterialPageRoute(
+              builder: (context) => const FormularioTransferencia(),
+            ),
+          )
+              .then(
+            (value) {
+              setState(() {});
+            },
+          );
+        },
+        child: const Icon(Icons.add),
+      ),
+    );
   }
 }
 
 class ItemTransferencia extends StatelessWidget {
   final Transferencia _transferencia;
-  ItemTransferencia(this._transferencia);
+  const ItemTransferencia(this._transferencia, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
