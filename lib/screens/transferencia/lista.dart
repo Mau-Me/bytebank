@@ -25,7 +25,7 @@ class _ListaTransferenciasState extends State<ListaTransferencias> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text(tituloAppBarFormularioTransferencias),
+        title: const Text(tituloAppBarListaTransferencias),
       ),
       body: FutureBuilder<List<Transferencia>>(
         initialData: const [],
