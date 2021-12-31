@@ -1,28 +1,20 @@
+import 'package:bytebank/screens/dashboard.dart';
+import 'package:bytebank/theme/style.dart';
 import 'package:flutter/material.dart';
 
-import 'screens/transferencia/lista.dart';
-
-void main() => runApp(BytebankApp());
+void main() {
+  runApp(const BytebankApp());
+}
 
 class BytebankApp extends StatelessWidget {
+  const BytebankApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: ListaTransferencias(),
+      home: const Dashboard(),
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSwatch(
-          primarySwatch: Colors.blueGrey,
-          accentColor: Colors.black,
-        ).copyWith(
-          secondary: Colors.lightBlueAccent[700],
-        ),
-        elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-            primary: Colors.lightBlueAccent[700],
-          ),
-        ),
-      ),
+      theme: style(),
     );
   }
 }
