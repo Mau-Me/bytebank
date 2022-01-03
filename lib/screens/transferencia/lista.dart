@@ -1,4 +1,4 @@
-import 'package:bytebank/database/app_database.dart';
+import 'package:bytebank/database/dao/transferencia_dao.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:bytebank/screens/transferencia/formulario.dart';
 import 'package:bytebank/constant/constants.dart';
@@ -21,6 +21,7 @@ class ListaTransferencias extends StatefulWidget {
 }
 
 class _ListaTransferenciasState extends State<ListaTransferencias> {
+  final TransferenciaDao _transferenciaDao = TransferenciaDao();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +30,7 @@ class _ListaTransferenciasState extends State<ListaTransferencias> {
       ),
       body: FutureBuilder<List<Transferencia>>(
         initialData: const [],
-        future: findAll(),
+        future: _transferenciaDao.findAll(),
         builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none:
@@ -41,7 +42,7 @@ class _ListaTransferenciasState extends State<ListaTransferencias> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: const [
                     CircularProgressIndicator(),
-                    Text('Carregando...'),
+                    Text(mensagemCarregamento),
                   ],
                 ),
               );

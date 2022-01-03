@@ -8,3 +8,4 @@ const String tituloAppBarListaTransferencias = 'Lista de Transferências';
 const String mensagemSucessoTransferencia =
     'Transferência realizada com sucesso!';
 const String nomeApp = 'Bytebank';
+const String mensagemCarregamento = 'Carregando...';

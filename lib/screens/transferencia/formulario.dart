@@ -1,6 +1,6 @@
 import 'package:bytebank/components/editor.dart';
 import 'package:bytebank/constant/constants.dart';
-import 'package:bytebank/database/app_database.dart';
+import 'package:bytebank/database/dao/transferencia_dao.dart';
 import 'package:bytebank/models/transferencia.dart';
 import 'package:flutter/material.dart';
 
@@ -59,15 +59,17 @@ class _FormularioTransferenciaState extends State<FormularioTransferencia> {
     final int? numeroConta = int.tryParse(_controladorCampoNumeroConta.text);
     final double? valorTransferencia =
         double.tryParse(_controladorCampoValor.text);
+    final TransferenciaDao _transferenciaDao = TransferenciaDao();
+
     if (numeroConta != null && valorTransferencia != null) {
       final Transferencia transferenciaCriada = Transferencia(
         id,
         numeroConta,
         valorTransferencia,
       );
-      save(transferenciaCriada).then(
-        (id) => Navigator.pop(context),
-      );
+      _transferenciaDao.save(transferenciaCriada).then(
+            (id) => Navigator.pop(context),
+          );
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Row(
