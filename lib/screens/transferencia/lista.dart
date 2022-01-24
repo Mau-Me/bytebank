@@ -89,15 +89,67 @@ class ItemTransferencia extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.edit),
             color: Colors.orange[300],
-            onPressed: () {},
+            onPressed: () {
+              _editarTransferencia(context);
+            },
           ),
           IconButton(
             icon: const Icon(Icons.delete),
             color: Colors.red[300],
-            onPressed: () {},
+            onPressed: () {
+              _deletaTransferencia(context);
+            },
           ),
         ]),
       ),
     ));
+  }
+
+  void _deletaTransferencia(BuildContext context) {
+    final TransferenciaDao _transferenciaDao = TransferenciaDao();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text('Número da Conta: ${_transferencia.numeroConta}'),
+          content: Text(
+              'Tem certeza que deseja excluir a transferencia ${_transferencia.valor}?'),
+          actions: <Widget>[
+            TextButton(
+              child: const Text('Cancelar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: const Text('Apagar'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                _transferenciaDao.delete(_transferencia.id!);
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Row(
+                      children: const <Widget>[
+                        Icon(Icons.price_check),
+                        Text("mensagemTransferenciaDeletada"),
+                      ],
+                    ),
+                    duration: const Duration(seconds: 3),
+                  ),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  void _editarTransferencia(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const FormularioTransferencia(),
+      ),
+    );
   }
 }
