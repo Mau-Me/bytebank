@@ -145,5 +145,11 @@ class ItemTransferencia extends StatelessWidget {
     );
   }
 
-  void _editarTransferencia(BuildContext context) {}
+  void _editarTransferencia(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const FormularioTransferencia(),
+      ),
+    );
+  }
 }
