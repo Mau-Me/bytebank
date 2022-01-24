@@ -26,6 +26,18 @@ class TransferenciaDao {
     return transferencias;
   }
 
+  Future<int> delete(int id) async {
+    final Database db = await getDatabase(tableSql);
+    return db.delete(_tableName, where: '$_id = ?', whereArgs: [id]);
+  }
+
+  Future<int> update(Transferencia transferencia) async {
+    final Database db = await getDatabase(tableSql);
+    Map<String, dynamic> transferenciaMap = _toMap(transferencia);
+    return db.update(_tableName, transferenciaMap,
+        where: '$_id = ?', whereArgs: [transferencia.id]);
+  }
+
   Map<String, dynamic> _toMap(Transferencia tranferencia) {
     final Map<String, dynamic> transferenciaMap = {};
     transferenciaMap[_numeroConta] = tranferencia.numeroConta;
